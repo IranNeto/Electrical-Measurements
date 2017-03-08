@@ -1,7 +1,10 @@
-//#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+//#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
 //#include <LiquidCrystal_I2C.h>
 #include <dummy.h>
-//LiquidCrystal_I2C lcd(0x3f, 20, 4); // set the LCD address to 0x27 for a 16 chars and 2 line display
+LiquidCrystal_I2C lcd(0x3f, 18, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
 
 //Porta analógica de leitura
 uint16_t pinoSensor = 0;
@@ -29,8 +32,8 @@ void setup() {
   //Incia a Serial
   Serial.begin(9600);
   pinMode(pinoSensor, INPUT);
-  //lcd.init();
-  //lcd.backlight();
+  lcd.init();
+  lcd.backlight();
 }
 
 void loop() {
@@ -39,10 +42,11 @@ void loop() {
     // le o sensor na pino analogico A0 e ajusta o valor lido ja que a saída do sensor é (1023)vcc/2 para corrente =0
     sensorValue_aux = (analogRead(pinoSensor) - 511);
     // somam os quadrados das leituras.
-    //Serial.println((analogRead(pinoSensor)));
+    Serial.println((analogRead(pinoSensor)));
     valorSensor += sensorValue_aux * sensorValue_aux;
     delay(1);
   }
+  //delay(10000000);
   //for modificado
   /*
     for (int i = 1000; i > 0; i--) {
@@ -64,16 +68,16 @@ void loop() {
 
   //Escreve
   //Mostra o valor da corrente
-  //lcd.clear();
-  //lcd.setCursor(0, 0);
-  //lcd.print("C(a): ");
-  //lcd.setCursor(8, 0);
-  //lcd.print(valorCorrente);
-  //lcd.setCursor(0, 1);
-  //cd.print("P(w): ");
-  //lcd.setCursor(8, 1);
+  lcd.clear();
+  lcd.setCursor(1, 0);
+  lcd.print("C(a): ");
+  lcd.setCursor(8, 0);
+  lcd.print(valorCorrente);
+  lcd.setCursor(0, 1);
+  lcd.print("P(w): ");
+  lcd.setCursor(8, 1);
   float pot = valorCorrente * tensao;
-  //lcd.print(pot);
+  lcd.print(pot);
 
   Serial.print(valorCorrente);
   Serial.print("  ");
