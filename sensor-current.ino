@@ -43,7 +43,6 @@ void loop() {
     valorSensor += sensorValue_aux * sensorValue_aux;
     delay(1);
   }
-  //delay(1000000000);
   //for modificado
   /*
     for (int i = 1000; i > 0; i--) {
@@ -81,4 +80,4 @@ void loop() {
   Serial.println(pot);
 
   delay(1);
-}
+} 
