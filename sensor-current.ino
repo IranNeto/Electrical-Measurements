@@ -13,8 +13,9 @@ int sensorValue_aux = 0;
 double valorSensor = 0;
 float valorCorrente = 0;
 
-//float voltsporUnidade = 0.004887586;// 5%1023
-float voltsporUnidade = 0.0009;// 1%1023
+//float voltsporUnidade = 0.004887586;// 5/1023
+float voltsporUnidade = 0.00322265625; // 3.3/1024
+//float voltsporUnidade = 0.0009;// 1/1023
 // Para ACS712 de  5 Amperes use 0.185
 // Para ACS712 de 10 Amperes use 0.100
 
