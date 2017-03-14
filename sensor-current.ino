@@ -1,4 +1,6 @@
 #include <LiquidCrystal_I2C.h>
+
+//#include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 //#include <LiquidCrystal_I2C.h>
 #include <dummy.h>
@@ -33,18 +35,25 @@ void setup() {
   pinMode(pinoSensor, INPUT);
   lcd.init();
   lcd.backlight();
+  /*
+   * 5A = 930
+   * 2.5A = 464
+   * 0A = 1
+   */
 }
 
 void loop() {
 
   for (int i = 5000; i > 0; i--) {
-    int val = analogRead(pinoSensor);
-    sensorValue_aux = map(val, 10, 690, 0, 1023);
+    //sensorValue_aux = map(val, 10, 690, 0, 1023);
     // le o sensor na pino analogico A0 e ajusta o valor lido ja que a saída do sensor é (1023)vcc/2 para corrente =0
+    sensorValue_aux = analogRead(pinoSensor);
+    sensorValue_aux = map(sensorValue_aux,1,930,1,1023);
     // somam os quadrados das leituras.
+    Serial.println(sensorValue_aux);
     sensorValue_aux -= 511;
     valorSensor += sensorValue_aux * sensorValue_aux;
-    delay(1);
+    delay(5);
   }
   //delay(10000000);
   //for modificado
@@ -61,7 +70,7 @@ void loop() {
   // calcula a corrente considerando a sensibilidade do sernsor (185 mV por amper)
   valorCorrente = (valorSensor/sensibilidade);
 
-  if (valorCorrente <= 0.095) {
+  if (valorCorrente <= 0.125) {
     valorCorrente = 0;
   }
   valorSensor = 0;
