@@ -1,22 +1,22 @@
 #include <LiquidCrystal_I2C.h>
-
-//#include <LiquidCrystal_I2C.h>
 #include <Wire.h>
-//#include <LiquidCrystal_I2C.h>
 #include <dummy.h>
 LiquidCrystal_I2C lcd(0x3f, 18, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
 
-//Porta analógica de leitura
-uint16_t pinoSensor = 0;
+//Porta analÃ³gica de leitura
+uint16_t pinoSensor = A0;
 
-//Variável auxiliar que pega o valor de leitura
+//VariÃ¡vel auxiliar que pega o valor de leitura instantaneo
 int sensorValue_aux = 0;
 
 double valorSensor = 0;
 float valorCorrente = 0;
 
 //float voltsporUnidade = 0.004887586;// 5/1023
+
+//Isso significa que a cada variação de voltsporUnidade 1 bit será movido
 float voltsporUnidade = 0.00322265625; // 3.3/1024
+
 //float voltsporUnidade = 0.0009;// 1/1023
 // Para ACS712 de  5 Amperes use 0.185
 // Para ACS712 de 10 Amperes use 0.100
@@ -32,7 +32,7 @@ int tensao = 220;
 void setup() {
   //Incia a Serial
   Serial.begin(9600);
-  pinMode(pinoSensor, INPUT);
+  pinMode(pinoSensor, INPUT_PULLUP);
   lcd.init();
   lcd.backlight();
   /*
@@ -44,14 +44,15 @@ void setup() {
 
 void loop() {
 
-  for (int i = 5000; i > 0; i--) {
+  for (int i = 3000; i > 0; i--) {
     //sensorValue_aux = map(val, 10, 690, 0, 1023);
-    // le o sensor na pino analogico A0 e ajusta o valor lido ja que a saída do sensor é (1023)vcc/2 para corrente =0
+    // le o sensor na pino analogico A0 e ajusta o valor lido ja que a saÃ­da do sensor Ã© (1023)vcc/2 para corrente =0
     sensorValue_aux = analogRead(pinoSensor);
-    sensorValue_aux = map(sensorValue_aux,1,930,1,1023);
+    sensorValue_aux -= 475; //METADE
+    sensorValue_aux = map(sensorValue_aux,1,950,1,1023);
     // somam os quadrados das leituras.
     Serial.println(sensorValue_aux);
-    sensorValue_aux -= 511;
+    //
     valorSensor += sensorValue_aux * sensorValue_aux;
     delay(5);
   }
@@ -65,12 +66,12 @@ void loop() {
     delay(10);
     }
   */
-  // finaliza o calculo da média quadratica e ajusta o valor lido para volts
-  valorSensor = sqrt(valorSensor/5000)* voltsporUnidade;
+  // finaliza o calculo da mÃ©dia quadratica e ajusta o valor lido para volts
+  valorSensor = sqrt(valorSensor/3000)*voltsporUnidade;
   // calcula a corrente considerando a sensibilidade do sernsor (185 mV por amper)
   valorCorrente = (valorSensor/sensibilidade);
 
-  if (valorCorrente <= 0.125) {
+  if (valorCorrente <= 0.095) {
     valorCorrente = 0;
   }
   valorSensor = 0;
@@ -94,5 +95,5 @@ void loop() {
   Serial.print("  ");
   Serial.println(pot);
 
-  delay(1);
+  delay(10000000000000);
 } 
