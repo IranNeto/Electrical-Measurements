@@ -1,6 +1,12 @@
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 #include <dummy.h>
+#include<QueueList.h>
+#include<stdlib.h>
+#include<ESP8266HTTPClient.h>
+#include<ESP8266WiFi.h>
+
+#include <WiFiManager.h> 
 LiquidCrystal_I2C lcd(0x3f, 18, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
 
 //Porta analÃ³gica de leitura
