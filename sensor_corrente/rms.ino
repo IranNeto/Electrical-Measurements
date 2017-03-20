@@ -3,7 +3,7 @@ double takeData(int loopTime){
   int start = millis();
   int theEnd = millis();
   while((theEnd - start) < loopTime){
-    sensorValue_aux = analogRead(pinSensor);
+    //sensorValue_aux = analogRead(pinSensor);
     sensorValue_aux = map(sensorValue_aux, 1, 490, 1, 512);
     sensorValue_aux -= 476; //METADE
     //Serial.println(sensorValue_aux);
