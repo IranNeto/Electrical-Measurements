@@ -1,4 +1,4 @@
-float rms(double valorSensor){
+float rms(double valorSensor, double dataInterval){
   // finaliza o calculo da mÃ©dia quadratica e ajusta o valor lido para volts
   valueSensor = sqrt(valueSensor/nData)*voltsperBit;
   // calcula a corrente considerando a sensibilidade do sernsor (185 mV por amper)
@@ -8,7 +8,7 @@ float rms(double valorSensor){
     valueCurrent = 0;
   }
   valueSensor = 0;
-
-  return valueCurrent;
+  double pot = (valueCurrent*220)*(dataInterval/3600000); 
+  return pot;
 }
 

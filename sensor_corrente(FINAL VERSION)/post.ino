@@ -2,20 +2,11 @@ void flagPost(){
   stopGettingData = true;
 }
 
-void postar(float pot){
-  updateHoraAtual();
-  sprintf(dateBuffer, "%04u-%02u-%02u %02u:%02u:%02u",  year(), month(), day(), hour(), minute(), second());
-  root["serial"] = serial;
-  root["data_hora"] = String(dateBuffer);
-  root["pulso"] = pot;
-  root.printTo(JSON);
-  String BigJson = "[" + JSON + "]";
-  Serial.println(JSON);
-  Serial.println(BigJson);
-  socket.emit(evento, BigJson);
+void postar(double pot){
+  String dateBuffer = updateHoraAtual();
+  String JSON = "[{" + aspas + "serial" + aspas + ": " + aspas + serial + aspas + ", " + aspas + "data_hora" + aspas + ": " + aspas + dateBuffer + aspas + ", " + aspas + "pulso" + aspas + ": " + pot + "}]"; 
+  socket.emit(evento, JSON);
   JSON = "";
-  BigJson = "";
   Serial.println("\n Postou \n");
-
   stopGettingData = false;
 }
