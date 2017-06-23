@@ -33,55 +33,51 @@ void flagPost();
 //===================================================================================
 
 LiquidCrystal_I2C lcd(0x3f, 18, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
-StaticJsonBuffer<100> jsonBuffer;
-SocketIOClient socket;
-DS1307 rtc(4, 5);
-Time temp;
+StaticJsonBuffer<100> jsonBuffer; //Parâmetros da biblioteca ArduinoJson
+SocketIOClient socket; //Instância da biblioteca SocketIOClient
+DS1307 rtc(4, 5); //Instância da biblioteca do rtc
+Time temp; //Instância da biblioteca Time 
 JsonObject& root = jsonBuffer.createObject();
-Ticker sending;
 
 //===================================================================================
 //VARIABLES
 //===================================================================================
 
-char host[] = "api.saiot.ect.ufrn.br";
-int port = 80;
-extern String RID;
+char host[] = "api.saiot.ect.ufrn.br"; //Host de envio
+int port = 80; //porta para envio
+extern String RID; //Constantes necessárias requisitadas pela biblioteca socket
 extern String Rname;
 extern String Rcontent;
 //String JSON;
-int pos = 0;
-int pinSensor = A0;
-int sensorValue_aux = 0;
-double valueSensor = 0;
-float valueCurrent = 0;
-float voltsperBit = 0.00329; // 3.3/1023
-float sensibility = 0.185; //mv/A
-int power = 220;
-int nData;
-int start, theEnd;
-char dateBuffer[30];
-String ipStr;
-unsigned long previousMillis = 0;
-long interval = 5000;
-unsigned long lastreply = 0;
-unsigned long lastsend = 0;
-int ano, mes, dia, hora, minuto, seg;
-bool stopGettingData = false;
-String dataAtual;
-String aspas = "\"";
-String espaco = " ";
+int pos = 0; //Posição
+int pinSensor = A0; //Porta onde os sinais estão sendo enviados
+int sensorValue_aux = 0; //Valor auxiliar do sensor
+double valueSensor = 0; //Valor do sensor
+float valueCurrent = 0; //Valor da corrente
+float voltsperBit = 0.00329; // 3.3/1023 proporção de uma unidade do adc pelo aumento de tensão do sinal
+float sensibility = 0.185; //mv/A proporção do sensor saída/entrada
+int power = 220; //Tensão que o circuito é submetido
+int nData; //Número de medições feitas
+int start, theEnd; //Medições de tempo
+char dateBuffer[30]; //
+String ipStr; //
+int ano, mes, dia, hora, minuto, seg; //variáveis 
+bool stopGettingData = false; //flag para se parar de pegar dados
+String dataAtual; //String com a data atual
+String aspas = "\""; //separadores de string
+String espaco = " "; 
+
 //===================================================================================
 //SETUP
 //=================================================================================
 
 void setup() {
 
-  Serial.begin(115200);
-  pinMode(pinSensor, INPUT_PULLUP);
-  sending.attach(timeToPost, flagPost);
+  Serial.begin(115200); //inicia o serial
+  pinMode(pinSensor, INPUT_PULLUP); //seta a porta de leitura
+  sending.attach(timeToPost, flagPost); //interrupção
   delay(10);
-  WiFiManager wifis;
+  WiFiManager wifis; 
   wifis.autoConnect();
   IPAddress ip = WiFi.localIP();
   ipStr = String(ip[0]) + String(".") + String(ip[1]) + String(".") + String(ip[2]) + String(".") + String(ip[3]);
