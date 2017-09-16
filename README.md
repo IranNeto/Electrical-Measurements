@@ -24,7 +24,6 @@ It will set the interruption and do the webSocket connection.
 ```
 void loop()
 ```
-	
 	It works as a sampling routine
 	* Take the sampling time
 	* Get the sensor's value, square it and accumule
@@ -35,7 +34,6 @@ void loop()
 ```
 	sensorValueI = map(sensorValueI, 1, 722, 1, 512);
 ```
-
 	The current sensor will output a range voltage from 0 to 5 V but the ESP's analogic pin only takes until 3.3 V so it's necessary to map those ranges
 
 	(when there's no current in the sensor it will output 2.5 V and the ADC will show
