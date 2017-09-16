@@ -19,16 +19,18 @@ See allow field.
 ```
 void setup()
 ```
-It will set the interruption and do the webSocket connection
+It will set the interruption and do the webSocket connection.
 
 ```
 void loop()
 ```
+	
 	It works as a sampling routine
 	* Take the sampling time
 	* Get the sensor's value, square it and accumule
 	* Count the number of samples
 	* Calcule the load power and send to post it.
+
 
 ```
 	sensorValueI = map(sensorValueI, 1, 722, 1, 512);
