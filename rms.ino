@@ -1,14 +1,23 @@
-float rms(double valorSensor, double dataInterval){
-  // finaliza o calculo da mÃ©dia quadratica e ajusta o valor lido para volts
-  valueSensor = sqrt(valueSensor/nData)*voltsperBit;
-  // calcula a corrente considerando a sensibilidade do sernsor (185 mV por amper)
-  valueCurrent = (valueSensor/sensibility);
+float rms(double sensorValueAcc, double samplingTime){
+  
 
-  if (valueCurrent <= 0.095) {
-    valueCurrent = 0;
+  // calculating rms value (see README.md)
+  sensorValueAcc = (sqrt(sensorValueAcc/nData)*voltsperBit)/sensibility;
+
+  //reducing smallers currents values
+  if (sensorValueAcc <= 0.095) {
+    sensorValueAcc = 0;
   }
-  valueSensor = 0;
-  double pot = (valueCurrent*220)*(dataInterval/3600000); 
-  return pot;
+
+  //resetting sensor's value
+  sensorValueAcc = 0;
+
+  /*
+    valueCurrent*220 = Get the total load power
+    samplingTime/3600000 = transform the sampling time to hour
+    the loadPower must be Wh 
+  */
+  loadPower = (valueCurrent*220)*(samplingTime/3600000); 
+  return loadPower;
 }
 

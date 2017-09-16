@@ -1,81 +1,62 @@
-//LIBRARIES
-//===================================================================================
-
+//LIBRARIES ======================
 #include <Time.h>
 #include <TimeLib.h>
 #include <Ticker.h>
-#include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 #include <ESP8266HTTPClient.h>
 #include <DS1307.h>
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
-#include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
+#include <WiFiManager.h>         
 #include <Arduino.h>
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 #include <ESP8266WiFi.h>
-#include <SocketIOClient.h>//#include <SocketIOsocket.h>
-#include <ArduinoJson.h>
-#include <WiFiManager.h>
 
-//===================================================================================
-//DEFINES AND FOWARDS DECLARATIONS
-//===================================================================================
+//DEFINES AND FOWARDS DECLARATIONS ======================
 
-#define evento "/post/log/tomada/"
+#define routeToPost "/post/log/tomada/"
 #define serial "sensorCorrente"
 #define timeToPost 20
+#define power 220 //220 V
 void flagPost();
 
-//===================================================================================
-//OBJECTS
-//===================================================================================
+//OBJECTS ======================
 
 LiquidCrystal_I2C lcd(0x3f, 18, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
-StaticJsonBuffer<100> jsonBuffer; //Parâmetros da biblioteca ArduinoJson
-SocketIOClient socket; //Instância da biblioteca SocketIOClient
-DS1307 rtc(4, 5); //Instância da biblioteca do rtc
-Time temp; //Instância da biblioteca Time 
+StaticJsonBuffer<100> jsonBuffer; //parameters library ArduinoJson
+SocketIOClient socket; //Instance library SocketIOClient
+DS1307 rtc(4, 5); //Instance library rtc
+Time temp; //Instance library Time 
 JsonObject& root = jsonBuffer.createObject();
+char dateBuffer[30]; //by default of some library
+String ipStr; //by default of some library
+//VARIABLES ======================
 
-//===================================================================================
-//VARIABLES
-//===================================================================================
-
-char host[] = "api.saiot.ect.ufrn.br"; //Host de envio
-int port = 80; //porta para envio
-extern String RID; //Constantes necessárias requisitadas pela biblioteca socket
+char host[] = "api.saiot.ect.ufrn.br"; //send to host
+int port = 80; //send to port
+extern String RID; //Constants of SocketIOClient
 extern String Rname;
 extern String Rcontent;
-//String JSON;
-int pos = 0; //Posição
-int pinSensor = A0; //Porta onde os sinais estão sendo enviados
-int sensorValue_aux = 0; //Valor auxiliar do sensor
-double valueSensor = 0; //Valor do sensor
-float valueCurrent = 0; //Valor da corrente
-float voltsperBit = 0.00329; // 3.3/1023 proporção de uma unidade do adc pelo aumento de tensão do sinal
-float sensibility = 0.185; //mv/A proporção do sensor saída/entrada
-int power = 220; //Tensão que o circuito é submetido
-int nData; //Número de medições feitas
-int start, theEnd; //Medições de tempo
-char dateBuffer[30]; //
-String ipStr; //
-int ano, mes, dia, hora, minuto, seg; //variáveis 
-bool stopGettingData = false; //flag para se parar de pegar dados
-String dataAtual; //String com a data atual
-String aspas = "\""; //separadores de string
-String espaco = " "; 
+int pinSensor = A0; //Sensor's pin at ESP8266
+int sensorValueI = 0; //Sersor's value data i of n  
+double sensorValueAcc = 0; //Sensor's value accumulated 
+float sensorValueAcc = 0; //Current Value
+float sensibility = 0.185; //mv/A in/out ratio of the sensor
+float voltsPerBit = 0.00329; //Minimal fluctuation of voltage to add a unity in the ADC
+int nData; //Number of data sampled 
+double timeBegin, timeEnd; //store the time that begun and finished the data sampling. 
+int year, month, day, hour, minute, second; //store the time request (see time.ino)
+bool stopGettingData = false; //flag that ends the sampling (ver post.ino)
+double loadPower; //power consumed by the load in the sampling time
 
-//===================================================================================
-//SETUP
-//=================================================================================
+//SETUP ======================
 
 void setup() {
 
-  Serial.begin(115200); //inicia o serial
-  pinMode(pinSensor, INPUT_PULLUP); //seta a porta de leitura
-  sending.attach(timeToPost, flagPost); //interrupção
+  Serial.begin(115200);
+  pinMode(pinSensor, INPUT_PULLUP);
+  sending.attach(timeToPost, flagPost); //interruption: each timeToPost seconds the function flagToPost is called 
   delay(10);
   WiFiManager wifis; 
   wifis.autoConnect();
@@ -86,30 +67,23 @@ void setup() {
     return;
   }
 }
-//===================================================================================
-//LOOP
-//===================================================================================
+
+//LOOP ======================
 
 void loop() {
   socket.monitor();
-  nData = 0;
-  //while(nData < 1000){
-  double start = millis();
+  nData = 0; //resetting number of samples
+  double timeBegin = millis();
   while(!stopGettingData){
-    sensorValue_aux = analogRead(A0);
-    //Serial.println(sensorValue_aux);
-    sensorValue_aux = map(sensorValue_aux, 1, 722, 1, 512);
-    sensorValue_aux -= 511; //METADE
-    valueSensor += sensorValue_aux * sensorValue_aux;
+    sensorValueI = analogRead(pinSensor); //read value in the analogic pin 
+    sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
+    sensorValueI -= 511; //offset (see README)
+    sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
     delay(10);
-    nData++;
+    nData++; //counting number of samples
   }
-  double fim = millis();
-                                                                                                                                                                                                                                                                                                        
-  //Serial.print("Valores quadráticos = "); Serial.println(valueSensor);
-  double pot = rms(valueSensor, fim-inicio);
-  //Serial.print("Valor rms = "); Serial.println(pot);
-  //Serial.print("nData = "); Serial.println(nData);
-  //delay(100000000000000000);
-  postar(pot);
+  double timeEnd = millis();
+
+  loadPower = rms(sensorValueAcc, timeEnd-timeBegin);
+  postIt(loadPower);
 }
