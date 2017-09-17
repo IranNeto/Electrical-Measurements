@@ -23,7 +23,6 @@ void flagPost();
 
 //OBJECTS ======================
 
-LiquidCrystal_I2C lcd(0x3f, 18, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
 StaticJsonBuffer<100> jsonBuffer; //parameters library ArduinoJson
 SocketIOClient socket; //Instance library SocketIOClient
 DS1307 rtc(4, 5); //Instance library rtc
@@ -31,6 +30,7 @@ Time temp; //Instance library Time
 JsonObject& root = jsonBuffer.createObject();
 char dateBuffer[30]; //by default of some library
 String ipStr; //by default of some library
+
 //VARIABLES ======================
 
 char host[] = "api.saiot.ect.ufrn.br"; //send to host
