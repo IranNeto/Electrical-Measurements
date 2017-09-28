@@ -2,15 +2,15 @@ float rms(double sensorValueAcc, double samplingTime){
   
 
   // calculating rms value (see README.md)
-  sensorValueAcc = (sqrt(sensorValueAcc/nData)*voltsperBit)/sensibility;
+  valueCurrent = (sqrt(sensorValueAcc/nData)*voltsPerBit)/sensibility;
 
   //reducing smallers currents values
-  if (sensorValueAcc <= 0.095) {
-    sensorValueAcc = 0;
+  if (valueCurrent <= 0.095) {
+    valueCurrent = 0;
   }
 
   //resetting sensor's value
-  sensorValueAcc = 0;
+  valueCurrent = 0;
 
   /*
     valueCurrent*220 = Get the total load power
