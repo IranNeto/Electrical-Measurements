@@ -1,5 +1,11 @@
 void flagPost() {
-  stopGettingData = true;
+  stopGettingData = true;  
+  teste++;
+  Serial.println(teste);
+  if(teste > 1000){
+    end = millis();
+    Serial.println(end - s);
+  }
 }
 
 void postIt(double loadPower) {

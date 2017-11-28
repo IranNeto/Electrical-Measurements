@@ -18,11 +18,11 @@
 
 #define routeToPost "/post/log/tomada/"
 //#define serial "sensorCorrente2"
-#define timeToPost 20
+#define timeToPost 0.009
 #define power 220 //220 V
 void flagPost();
 Ticker sending;
-
+double start = millis();
 //OBJECTS ======================
 
 //StaticJsonBuffer<100> jsonBuffer; //parameters library ArduinoJson
@@ -54,45 +54,50 @@ float valueCurrent;
 //SETUP ======================
 
 void setup() {
+    WiFi.begin("LII", "wifiLI2Rn");
+    Serial.begin(9600);
+    pinMode(pinSensor, INPUT_PULLUP);
+    sending.attach(timeToPost, flagPost); //interruption: each timeToPost seconds the function flagToPost is called
+    delay(10);
+    WiFiManager wifis;
+    wifis.autoConnect();
+    IPAddress ip = WiFi.localIP();
+    ipStr = String(ip[0]) + String(".") + String(ip[1]) + String(".") + String(ip[2]) + String(".") + String(ip[3]);
+    //if (!socket.connect(host, port)) {
+        // Serial.println("connection failed");
+        //return;
+        //}
+        while (WiFi.status() != WL_CONNECTED) {
+            
+            delay(500);
+            Serial.println("Waiting for connection");
+        }
+    }
 
-  WiFi.begin("LII", "wifiLI2Rn");
-  Serial.begin(115200);
-  pinMode(pinSensor, INPUT_PULLUP);
-  sending.attach(timeToPost, flagPost); //interruption: each timeToPost seconds the function flagToPost is called
-  delay(10);
-  WiFiManager wifis;
-  wifis.autoConnect();
-  IPAddress ip = WiFi.localIP();
-  ipStr = String(ip[0]) + String(".") + String(ip[1]) + String(".") + String(ip[2]) + String(".") + String(ip[3]);
-  //if (!socket.connect(host, port)) {
-   // Serial.println("connection failed");
-    //return;
-  //}
-  while (WiFi.status() != WL_CONNECTED) {
-
-    delay(500);
-    Serial.println("Waiting for connection");
-  }
-
+int teste = 0;
+double s = millis();
+double end;
+void loop(){
+    //Serial.println("XXXXXXXXXXX");
 }
-
 
 //LOOP ======================
-
+/*
 void loop() {
-  //socket.monitor();
-  nData = 0; //resetting number of samples
-  double timeBegin = millis();
-  while (!stopGettingData) {
-    sensorValueI = analogRead(pinSensor); //read value in the analogic pin
-    sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
-    sensorValueI -= 511; //offset (see README)
-    sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
-    delay(10);
-    nData++; //counting number of samples
-  }
-  double timeEnd = millis();
-
-  loadPower = rms(sensorValueAcc, timeEnd - timeBegin);
-  postIt(loadPower);
+    //socket.monitor();
+    nData = 0; //resetting number of samples
+    double timeBegin = millis();
+    while (!stopGettingData) {
+        sensorValueI = analogRead(pinSensor); //read value in the analogic pin
+        sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
+        sensorValueI -= 511; //offset (see README)
+        sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
+        delay(10);
+        nData++; //counting number of samples
+    }
+    double timeEnd = millis();
+    
+    loadPower = rms(sensorValueAcc, timeEnd - timeBegin);
+    postIt(loadPower);
 }
+*/
