@@ -29,4 +29,3 @@ float rms(double sensorValueAcc, double samplingTime){
   valueCurrent = 0; 
   return loadPower;
 }
-

@@ -56,7 +56,7 @@ double sumData;
 //SETUP ======================
 
 void setup() {
-    WiFi.begin("RSBEZERRA2", "ssberj78");
+    WiFi.begin("Robotica-IMD", "roboticawifi");
     Serial.begin(9600);
     pinMode(pinSensor, INPUT); //<---------------------
     sending.attach(timeToPost, flagPost); //interruption: each timeToPost seconds the function flagToPost is called
@@ -74,6 +74,7 @@ void setup() {
             delay(500);
             Serial.println("Waiting for connection");
         }
+        randomSeed((NULL));
     }
 
 //LOOP ======================
@@ -87,6 +88,7 @@ void loop() {
 
     double timeBegin = millis();
     while (!stopGettingData) {
+        
         sensorValueI = analogRead(pinSensor); //read value in the analogic pin
         sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
         sensorValueI -= 512; //offset (see README)
@@ -98,6 +100,20 @@ void loop() {
         sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
         delay(10);
         nData++; //counting number of samples
+        
+        
+        /*
+        sensorValueI = random(1,1024);
+        sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
+        if(nData < 100){
+            data[nData] += sensorValueI;
+            sumData = sumData + sensorValueI;
+        }
+        Serial.println(sensorValueI);
+        sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
+        nData++;
+        delay(10);
+        */
     }
     double timeEnd = millis();
     
