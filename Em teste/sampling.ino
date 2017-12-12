@@ -18,7 +18,7 @@
 
 #define routeToPost "/post/log/tomada/"
 //#define serial "sensorCorrente2"
-#define timeToPost 10
+#define timeToPost 8
 #define power 220 //220 V
 void flagPost();
 Ticker sending;
@@ -56,56 +56,64 @@ double sumData;
 //SETUP ======================
 
 void setup() {
-    WiFi.begin("RSBEZERRA2", "ssberj78");
-    Serial.begin(9600);
-    pinMode(pinSensor, INPUT); //<---------------------
-    sending.attach(timeToPost, flagPost); //interruption: each timeToPost seconds the function flagToPost is called
-    delay(10);
-    WiFiManager wifis;
-    wifis.autoConnect();
-    IPAddress ip = WiFi.localIP();
-    ipStr = String(ip[0]) + String(".") + String(ip[1]) + String(".") + String(ip[2]) + String(".") + String(ip[3]);
-    //if (!socket.connect(host, port)) {
-        // Serial.println("connection failed");
-        //return;
-        //}
-        while (WiFi.status() != WL_CONNECTED) {
-            
-            delay(500);
-            Serial.println("Waiting for connection");
-        }
-    }
-
-//LOOP ======================
-
-void loop() {
-    //socket.monitor();
-    nData = 0; //resetting number of samples
-    sensorValueAcc = 0;
-    sensorValueI = 0;
-    sumData = 0;
-
-    double timeBegin = millis();
-    while (!stopGettingData) {
-        sensorValueI = analogRead(pinSensor); //read value in the analogic pin
-        sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
-        sensorValueI -= 512; //offset (see README)
-        if(nData < 100){
-            data[nData] += sensorValueI;
-            sumData = sumData + sensorValueI;
-        }
-        Serial.println(sensorValueI);
-        sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
-        delay(10);
-        nData++; //counting number of samples
-    }
-    double timeEnd = millis();
-    
-    if(!isOn(data, sumData)){
-        Serial.println("Ta desligado");
-        delay(10000000);
-    }
-
-    loadPower = rms(sensorValueAcc, timeEnd - timeBegin);
-    postIt(loadPower);
-}
+	Serial.begin(9600);
+	Serial.println("teste");
+	pinMode(pinSensor, INPUT);
+	sending.attach_ms(timeToPost, flagPost);
+	/*
+	WiFi.begin("RSBEZERRA2", "");
+	Serial.begin(9600);
+	pinMode(pinSensor, INPUT); //<---------------------
+	sending.attach_ms(timeToPost, flagPost); //interruption: each timeToPost seconds the function flagToPost is called
+	delay(10);
+	WiFiManager wifis;
+	wifis.autoConnect();
+	IPAddress ip = WiFi.localIP();
+	ipStr = String(ip[0]) + String(".") + String(ip[1]) + String(".") + String(ip[2]) + String(".") + String(ip[3]);
+	//if (!socket.connect(host, port)) {
+		// Serial.println("connection failed");
+		//return;
+		//}
+		while (WiFi.status() != WL_CONNECTED) {
+			
+			delay(500);
+			Serial.println("Waiting for connection");
+		}
+		*/
+	}
+	
+	//LOOP ======================
+	
+	void loop() {
+		/*
+		//socket.monitor();
+		nData = 0; //resetting number of samples
+		sensorValueAcc = 0;
+		sensorValueI = 0;
+		sumData = 0;
+		
+		double timeBegin = millis();
+		while (!stopGettingData) {
+			sensorValueI = analogRead(pinSensor); //read value in the analogic pin
+			sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
+			sensorValueI -= 512; //offset (see README)
+			if(nData < 100){
+				data[nData] += sensorValueI;
+				sumData = sumData + sensorValueI;
+			}
+			Serial.println(sensorValueI);
+			sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
+			delay(10);
+			nData++; //counting number of samples
+		}
+		double timeEnd = millis();
+		
+		if(!isOn(data, sumData)){
+			Serial.println("Ta desligado");
+			delay(10000000);
+		}
+		
+		loadPower = rms(sensorValueAcc, timeEnd - timeBegin);
+		postIt(loadPower);
+		*/
+	}

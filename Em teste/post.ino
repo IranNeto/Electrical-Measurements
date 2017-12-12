@@ -1,5 +1,6 @@
 void flagPost() {
-  stopGettingData = true;
+  //stopGettingData = true;
+  Serial.println(analogRead(pinSensor));
 }
 
 void postIt(double loadPower) {
