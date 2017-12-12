@@ -56,6 +56,7 @@ double sumData;
 //SETUP ======================
 
 void setup() {
+<<<<<<< HEAD
 	Serial.begin(9600);
 	Serial.println("teste");
 	pinMode(pinSensor, INPUT);
@@ -117,3 +118,74 @@ void setup() {
 		postIt(loadPower);
 		*/
 	}
+=======
+    WiFi.begin("Robotica-IMD", "roboticawifi");
+    Serial.begin(9600);
+    pinMode(pinSensor, INPUT); //<---------------------
+    sending.attach(timeToPost, flagPost); //interruption: each timeToPost seconds the function flagToPost is called
+    delay(10);
+    WiFiManager wifis;
+    wifis.autoConnect();
+    IPAddress ip = WiFi.localIP();
+    ipStr = String(ip[0]) + String(".") + String(ip[1]) + String(".") + String(ip[2]) + String(".") + String(ip[3]);
+    //if (!socket.connect(host, port)) {
+        // Serial.println("connection failed");
+        //return;
+        //}
+        while (WiFi.status() != WL_CONNECTED) {
+            
+            delay(500);
+            Serial.println("Waiting for connection");
+        }
+        randomSeed((NULL));
+    }
+
+//LOOP ======================
+
+void loop() {
+    //socket.monitor();
+    nData = 0; //resetting number of samples
+    sensorValueAcc = 0;
+    sensorValueI = 0;
+    sumData = 0;
+
+    double timeBegin = millis();
+    while (!stopGettingData) {
+        
+        sensorValueI = analogRead(pinSensor); //read value in the analogic pin
+        sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
+        sensorValueI -= 512; //offset (see README)
+        if(nData < 100){
+            data[nData] += sensorValueI;
+            sumData = sumData + sensorValueI;
+        }
+        Serial.println(sensorValueI);
+        sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
+        delay(10);
+        nData++; //counting number of samples
+        
+        
+        /*
+        sensorValueI = random(1,1024);
+        sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
+        if(nData < 100){
+            data[nData] += sensorValueI;
+            sumData = sumData + sensorValueI;
+        }
+        Serial.println(sensorValueI);
+        sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
+        nData++;
+        delay(10);
+        */
+    }
+    double timeEnd = millis();
+    
+    if(!isOn(data, sumData)){
+        Serial.println("Ta desligado");
+        delay(10000000);
+    }
+
+    loadPower = rms(sensorValueAcc, timeEnd - timeBegin);
+    postIt(loadPower);
+}
+>>>>>>> e674160af23b119eebf4f7492c15711d860c3c0d
