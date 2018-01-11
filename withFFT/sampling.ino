@@ -47,8 +47,10 @@ int pinSensor = A0; //Sensor's pin at ESP8266
 int year, month, day, hour, minute, second; //store the time request (see time.ino)
 bool stopGettingData = false; //flag that ends the sampling (ver post.ino)
 double sumData;
-
-
+float sensibility = 0.185; //mv/A in/out ratio of the sensor
+float voltsPerBit = 0.00329; //Minimal fluctuation of voltage to add a unity in the ADC
+int nHarmonic = 0;
+double magnitudeHarmonic[20] ={};
 //=======================================================================================================
 //========================================= SETUP =======================================================
 //=======================================================================================================
