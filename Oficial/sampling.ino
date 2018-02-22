@@ -8,7 +8,6 @@
 //#include <DS1307.h>
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
-#include <WiFiManager.h>
 #include <Arduino.h>
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
@@ -18,7 +17,7 @@
 
 #define routeToPost "/post/log/tomada/"
 //#define serial "sensorCorrente2"
-#define timeToPost 0.009
+#define timeToPost 2
 #define power 220 //220 V
 void flagPost();
 Ticker sending;
@@ -59,14 +58,6 @@ void setup() {
     pinMode(pinSensor, INPUT_PULLUP);
     sending.attach(timeToPost, flagPost); //interruption: each timeToPost seconds the function flagToPost is called
     delay(10);
-    WiFiManager wifis;
-    wifis.autoConnect();
-    IPAddress ip = WiFi.localIP();
-    ipStr = String(ip[0]) + String(".") + String(ip[1]) + String(".") + String(ip[2]) + String(".") + String(ip[3]);
-    //if (!socket.connect(host, port)) {
-        // Serial.println("connection failed");
-        //return;
-        //}
         while (WiFi.status() != WL_CONNECTED) {
             
             delay(500);
@@ -77,14 +68,10 @@ void setup() {
 int teste = 0;
 double s = millis();
 double end;
-void loop(){
-    //Serial.println("XXXXXXXXXXX");
-}
 
 //LOOP ======================
-/*
+
 void loop() {
-    //socket.monitor();
     nData = 0; //resetting number of samples
     double timeBegin = millis();
     while (!stopGettingData) {
@@ -100,4 +87,3 @@ void loop() {
     loadPower = rms(sensorValueAcc, timeEnd - timeBegin);
     postIt(loadPower);
 }
-*/
