@@ -40,7 +40,7 @@ void printNumero(numero a){
 
 void printNumeros(numero *a, int N){
 	for(int i=0; i < N; i++){
-		printNumero(a[i]);
+		printf("%.2f \n", sqrt(a[i].real*a[i].real + a[i].imag*a[i].imag));
 	}
 }
 
@@ -120,16 +120,12 @@ numero* ordenar(numero* ordFFT, int N){
 }
 
 int main(){	
-	int N = 4;
+	int N = 1024;
 	struct numero* input = (struct numero*) malloc((N) * sizeof(struct numero));
 	int cont = 0;
-	//for(int i=0; i<N; i++){
-	//	input[i] = atribuir(i,0);
-	//}
-	input[0] = atribuir(1,0);
-	input[1] = atribuir(0,1);
-	input[2] = atribuir(-1,0);
-	input[3] = atribuir(-1,-1);
+	for(int i=0; i<N; i++){
+		input[i] = atribuir(20*sin(2*PI*i/60),0);
+	}
 	numero *ordFFT = radix(input,N);
 	numero *ordCresc = ordenar(ordFFT, N);
 	printNumeros(ordCresc, N);

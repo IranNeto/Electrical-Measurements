@@ -26,6 +26,7 @@
 #define SCL_INDEX 0x00
 #define SCL_TIME 0x01
 #define SCL_FREQUENCY 0x02
+
 const uint16_t samples = 1024; //This value MUST ALWAYS be a power of 2
 double signalFrequency = 60;
 double samplingFrequency;
