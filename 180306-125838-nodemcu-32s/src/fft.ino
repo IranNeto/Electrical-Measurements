@@ -4,6 +4,9 @@ numero soma(numero a, numero b){
 	res.imag = a.imag + b.imag;	
 	return res;
 }
+float mag(numero a){
+    return sqrt(a.real*a.real+a.imag*a.imag);
+}
 
 numero atribuir(float real, float imag){
 	numero res;
@@ -37,40 +40,26 @@ void printNormalHarmonics(float* harmonic){
 
 }
 
-void printHarmonicsContribuition(float* harmonic){
-	Serial.println("Harmonicos: ");
-	for(int i = 0; i < 8; i++){
-		Serial.print(i);
-		Serial.print(" - ");
-		Serial.println(harmonic[i]);
-	}
-
-	Serial.println("=================");
-	printNormalHarmonics(harmonic);
-}
-
-void printNumeros(numero *a, int N, bool withMag){
-
-	float harmonics[8] = {};
-	int n = 0;
-	for(int i=0; i < N; i++){
-		if(withMag){
-			//Serial.print(i);
-			//Serial.print(" - ");
-			Serial.println(sqrt(a[i].real * a[i].real + a[i].imag * a[i].imag), 6);
-			delay(10);
-		} else if(!(i%60) && i >= 60){
-			for(int j = -5; j < 5; j++){
-				harmonics[n] += sqrt(a[i+j].real * a[i+j].real + a[i+j].imag * a[i+j].imag);
-			}
-			n++;
-		}
-	}
-	Serial.println("===============================");
-	if(!withMag){
-		printHarmonicsContribuition(harmonics);
-	}
-	
+float* getHarmonics(numero *data){
+    int fund = 0;
+    float currentFreq = 0;
+	float* harmonics = (float*) malloc(10*sizeof(float));
+    for(int i = 0; i < N; i++){
+        currentFreq = mag(data[i]);
+        //Serial.println(mag(data[i]));
+        if(currentFreq > fund){
+            fund = currentFreq;
+        }
+    }
+    Serial.println("===== CONTRIBUICOES DOS HARM =====");
+    //garanto que ele encontre a contribuicao de todas as harmonicas 
+    for(int n = 0; n < N%fund; n++){
+        for(int j = -5; j < 5; j++){
+            if(fund + j < N) //evita procuras fora do limite do vetor
+                harmonics[n] += mag(data[i*(fund+j)]);
+        }
+    }
+    return harmonics;
 }
 
 numero* radix2(numero a, numero b){
@@ -145,19 +134,18 @@ numero* ordenar(numero* ordFFT, int N){
 	
 }
 
-void getSpectrum(int tempoAmostragem, int* data){	
-	int N = 512;
-	struct numero* input = (struct numero*) malloc((N) * sizeof(struct numero));
+float* getSpectrum(int tempoAmostragem, numero* input){	
 	int cont = 0;
 	float value;
+    /*
 	for(int i=0; i<N; i++){
-		value = cos(2*i*3.14*60);
+		value = cos(2*M_PI*60*i/N);
 		input[i] = atribuir(value, 0);
-		Serial.println(value, 6);
 	}
-	Serial.println("=================================");
+    */
+	Serial.println("========== OPERANDO FFT ==============");
 	numero *ordFFT = radix(input,N);
 	numero *ordCresc = ordenar(ordFFT, N);
-	printNumeros(ordCresc, N, true);
-	printNumeros(ordCresc, N, false);
+	//debugar todas as magnitudes
+    return(getHarmonics(ordCresc));
 }

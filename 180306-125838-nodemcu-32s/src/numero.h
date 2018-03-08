@@ -5,4 +5,3 @@ struct numero {
     float imag;
 };
 #endif
-
