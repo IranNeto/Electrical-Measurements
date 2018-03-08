@@ -57,10 +57,10 @@ double sensorValueAcc = 0; //Sensor's value accumulated
 float Ifundamental;
 struct numero* input = (struct numero*) malloc((N) * sizeof(struct numero));
 float sensibility = 0.100; //mv/A in/out ratio of the sensor
-float voltsPerBit = 0.0048875855327468; //Minimal fluctuation of voltage to add a unity in the ADC
+float voltsPerBit = 0.0008056641; //Minimal fluctuation of voltage to add a unity in the ADC
 float* harmonics;
 int i = 0;
-int pinSensor = A0; //Sensor's pin at ESP8266
+int pinSensor = 36; //Sensor's pin at ESP8266
 float Irms;
 int nharmonics = 10;
 //SETUP ======================
@@ -101,33 +101,33 @@ void setup() {
 
 void loop() {
     
-    timeBegin = millis();
+    timeBegin = micros();
     
     while (i < N) {
         Serial.println(i);
         sensorValueI = analogRead(pinSensor); //read value in the analogic pin
-        sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
-        sensorValueI -= 511; //offset (see README)
+        sensorValueI = map(sensorValueI, 1, 3351, 1, 2048); //manual conversion (see README.md)
+        sensorValueI -= 2048; //offset (see README)
         input[i] = atribuir(sensorValueI,0);
         sensorValueAcc += sensorValueI * sensorValueI; //sum of the square data
         i++; //counting number of samples
         input[i] = atribuir(sensorValueI,0);
-        delay(8);
     }
     
-    timeEnd = millis();
-    //Serial.println((timeEnd - timeBegin)*1000/N);
-    //delay(100000000);
+    timeEnd = micros();
+    Serial.println(N/((timeEnd - timeBegin)*1000000), 6);
+    delay(100000000);
     i = 0;
-
+    
     //o calculo é a Irms
-    Irms = 10.0; //(sqrt(sensorValueAcc/N)*voltsPerBit)/sensibility;
-
+    Irms = ((sqrt(sensorValueAcc/N)*voltsPerBit)/sensibility) / ((timeEnd - timeBegin)/1000);
+    sensorValueAcc = 0;
     //recebe a contribuição de cada harmonico através do espectro
     //soma das magnitudes
     harmonics = getSpectrum(timeEnd - timeBegin, input);
     Serial.print("Irms: ");
     Serial.println(Irms);
     postIt(getTHD(harmonics, Irms));
-    delay(10000);
+    delay(10000000000);
+    
 }
