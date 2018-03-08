@@ -53,10 +53,9 @@ float valueCurrent;
 //SETUP ======================
 
 void setup() {
-    WiFi.begin("LII", "wifiLI2Rn");
+    WiFi.begin("ESP", "12345678");
     Serial.begin(9600);
     pinMode(pinSensor, INPUT_PULLUP);
-    sending.attach(timeToPost, flagPost); //interruption: each timeToPost seconds the function flagToPost is called
     delay(10);
         while (WiFi.status() != WL_CONNECTED) {
             
@@ -73,17 +72,7 @@ double end;
 
 void loop() {
     nData = 0; //resetting number of samples
-    double timeBegin = millis();
-    while (!stopGettingData) {
-        sensorValueI = analogRead(pinSensor); //read value in the analogic pin
-        sensorValueI = map(sensorValueI, 1, 775, 1, 512); //manual conversion (see README.md)
-        sensorValueI -= 511; //offset (see README)
-        sensorValueAcc += sensorValueI * sensorValueI; //sum of the data' squares
-        delay(10);
-        nData++; //counting number of samples
-    }
-    double timeEnd = millis();
-    
-    loadPower = rms(sensorValueAcc, timeEnd - timeBegin);
+    loadPower = 2.0;
     postIt(loadPower);
+    delay(2000);
 }

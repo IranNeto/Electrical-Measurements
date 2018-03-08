@@ -1,5 +1,14 @@
 
-void postIt(float* harmonics){};
+void postIt(float* harmonics){
+
+  for(int i = 0; i < nharmonics; i++){
+    Serial.print(i);
+    Serial.print(" - ");
+    Serial.println(harmonics[i], 6);
+  }
+
+}
+
 /*
 //Definir como vou enviar isso
 void postIt(float* harmonics) {

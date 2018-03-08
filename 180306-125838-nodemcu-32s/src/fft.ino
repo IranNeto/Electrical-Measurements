@@ -42,24 +42,48 @@ void printNormalHarmonics(float* harmonic){
 
 float* getHarmonics(numero *data){
     int fund = 0;
-    float currentFreq = 0;
-	float* harmonics = (float*) malloc(10*sizeof(float));
-    for(int i = 0; i < N; i++){
-        currentFreq = mag(data[i]);
-        //Serial.println(mag(data[i]));
-        if(currentFreq > fund){
-            fund = currentFreq;
+
+	float* harmonics = (float*) malloc(nharmonics*sizeof(float));
+
+    Serial.println("=== GET HARMONICS =====");
+	
+	//testes com N-1
+	for(int i = 0; i < N; i++){
+		//preenchendo o vetor de zeros
+		if(i < nharmonics)
+			harmonics[i] = 0;
+
+		//algoritmo do trono para pegar a maior freq
+        Serial.println(mag(data[i]));
+        if(i < 256 && mag(data[i]) > mag(data[fund]) ){
+            fund = i;
         }
     }
+
+	Serial.print("Fundamental: ");
+	Serial.println(fund);
+	delay(1000);
+
     Serial.println("===== CONTRIBUICOES DOS HARM =====");
     //garanto que ele encontre a contribuicao de todas as harmonicas 
-    for(int n = 0; n < N%fund; n++){
+    for(int n = 0; n < 10; n++){
         for(int j = -5; j < 5; j++){
-            if(fund + j < N) //evita procuras fora do limite do vetor
-                harmonics[n] += mag(data[i*(fund+j)]);
+            
+			if(fund + j <= N && fund + j >= 0) //evita procuras fora do limite do vetor
+				if(fund != 0){
+                	harmonics[n] += mag(data[((n+1)*fund)+j]);                                                                      
+				}else{
+					harmonics[n] += mag(data[0]);
+					break;
+				}
+			Serial.print("n: ");
+			Serial.println(n);
         }
+		if(!fund)
+			break;
     }
-    return harmonics;
+	Serial.println("X");
+    return (harmonics);
 }
 
 numero* radix2(numero a, numero b){
@@ -135,6 +159,7 @@ numero* ordenar(numero* ordFFT, int N){
 }
 
 float* getSpectrum(int tempoAmostragem, numero* input){	
+	Serial.println("SPECTRUM");
 	int cont = 0;
 	float value;
     /*
