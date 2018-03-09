@@ -12,7 +12,8 @@
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 #include <ESP8266WiFi.h>
-
+#include <stdlib.h>
+#include <time.h>   
 //DEFINES AND FOWARDS DECLARATIONS ======================
 
 #define routeToPost "/post/log/tomada/"
@@ -33,7 +34,6 @@ char dateBuffer[40]; //by default of some library
 String ipStr; //by default of some library
 
 //VARIABLES ======================
-
 char host[] = "api.saiot.ect.ufrn.br"; //send to host
 int port = 80; //send to port
 extern String RID; //Constants of SocketIOClient
@@ -72,7 +72,8 @@ double end;
 
 void loop() {
     nData = 0; //resetting number of samples
-    loadPower = 2.0;
+    loadPower = random(3) % 2 + 0.5 + 1.1 * random(2);
+    Serial.println(loadPower);
     postIt(loadPower);
     delay(2000);
 }

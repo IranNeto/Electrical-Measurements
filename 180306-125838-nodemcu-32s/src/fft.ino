@@ -4,8 +4,9 @@ numero soma(numero a, numero b){
 	res.imag = a.imag + b.imag;	
 	return res;
 }
-float mag(numero a){
-    return sqrt(a.real*a.real+a.imag*a.imag);
+
+double mag(numero a){
+    return sqrt(a.real * a.real + a.imag * a.imag);
 }
 
 numero atribuir(float real, float imag){
@@ -32,57 +33,46 @@ void printNumero(numero a){
 	Serial.print(" ");
 	Serial.println(a.imag);
 }
-void printNormalHarmonics(float* harmonic){
-	float hPercent[8] = {};
-	for(int i = 0; i < 8; i++){
-		Serial.println(100*harmonic[i]/harmonic[0]);
-	}
-
-}
 
 float* getHarmonics(numero *data){
     int fund = 0;
-
 	float* harmonics = (float*) malloc(nharmonics*sizeof(float));
 
     Serial.println("=== GET HARMONICS =====");
 	
-	//testes com N-1
 	for(int i = 0; i < N; i++){
 		//preenchendo o vetor de zeros
 		if(i < nharmonics)
-			harmonics[i] = 0;
-
+			harmonics[i] = 0.0;
+		Serial.println(mag(data[i]));
 		//algoritmo do trono para pegar a maior freq
-        Serial.println(mag(data[i]));
-        if(i < 256 && mag(data[i]) > mag(data[fund]) ){
+        if(mag(data[i]) > mag(data[fund]) ){
             fund = i;
         }
     }
 
-	Serial.print("Fundamental: ");
+	Serial.print("fundamental: ");
 	Serial.println(fund);
 	delay(1000);
 
     Serial.println("===== CONTRIBUICOES DOS HARM =====");
     //garanto que ele encontre a contribuicao de todas as harmonicas 
     for(int n = 0; n < 10; n++){
-        for(int j = -5; j < 5; j++){
-            
-			if(fund + j <= N && fund + j >= 0) //evita procuras fora do limite do vetor
-				if(fund != 0){
+        for(int j = -5; j < 6; j++){
+			if(fund + j < N && fund + j >= 0){ //evita procuras fora do limite do vetor
+				if(fund > 2){
                 	harmonics[n] += mag(data[((n+1)*fund)+j]);                                                                      
 				}else{
 					harmonics[n] += mag(data[0]);
 					break;
 				}
+			}
 			Serial.print("n: ");
 			Serial.println(n);
         }
-		if(!fund)
+		if(fund > 2)
 			break;
     }
-	Serial.println("X");
     return (harmonics);
 }
 
@@ -160,9 +150,10 @@ numero* ordenar(numero* ordFFT, int N){
 
 float* getSpectrum(int tempoAmostragem, numero* input){	
 	Serial.println("SPECTRUM");
+	/*
 	int cont = 0;
 	float value;
-    /*
+  
 	for(int i=0; i<N; i++){
 		value = cos(2*M_PI*60*i/N);
 		input[i] = atribuir(value, 0);

@@ -7,6 +7,8 @@
 #include <math.h>
 
 int N = 512;
+int MAX = 256;
+float pi = 3.1415926535897932384;
 
 WiFiMulti wifiMulti;
 HTTPClient http;
@@ -63,6 +65,7 @@ int i = 0;
 int pinSensor = 36; //Sensor's pin at ESP8266
 float Irms;
 int nharmonics = 10;
+float offset;
 //SETUP ======================
 
 
@@ -100,34 +103,30 @@ void setup() {
 
 
 void loop() {
-    
+    delay(100);
+    offset = getOffset();
     timeBegin = micros();
-    
-    while (i < N) {
-        Serial.println(i);
-        sensorValueI = analogRead(pinSensor); //read value in the analogic pin
-        sensorValueI = map(sensorValueI, 1, 3351, 1, 2048); //manual conversion (see README.md)
+    while (i < N){
+        sensorValueI = map(analogRead(pinSensor) - 11, 1, offset, 1, 2048); //manual conversion (see README.md)
         sensorValueI -= 2048; //offset (see README)
         input[i] = atribuir(sensorValueI,0);
         sensorValueAcc += sensorValueI * sensorValueI; //sum of the square data
         i++; //counting number of samples
-        input[i] = atribuir(sensorValueI,0);
     }
-    
     timeEnd = micros();
-    Serial.println(N/((timeEnd - timeBegin)*1000000), 6);
-    delay(100000000);
-    i = 0;
+
     
     //o calculo é a Irms
-    Irms = ((sqrt(sensorValueAcc/N)*voltsPerBit)/sensibility) / ((timeEnd - timeBegin)/1000);
+    Irms = ((sqrt(sensorValueAcc/N)*voltsPerBit)/sensibility);
+    
     sensorValueAcc = 0;
+    i = 0;
+    
     //recebe a contribuição de cada harmonico através do espectro
     //soma das magnitudes
-    harmonics = getSpectrum(timeEnd - timeBegin, input);
+    harmonics = calculaNamostras(timeEnd - timeBegin, );//getSpectrum(timeEnd - timeBegin, input);
     Serial.print("Irms: ");
     Serial.println(Irms);
     postIt(getTHD(harmonics, Irms));
-    delay(10000000000);
-    
+    delay(10000);
 }
