@@ -6,26 +6,35 @@
 #include "numero.h"
 #include <math.h>
 #include "arduinoFFT.h"
+#include <PubSubClient.h>
 
 arduinoFFT FFT = arduinoFFT();
-
 int N = 1024;
-
-int MAX = 256;
-float pi = 3.1415926535897932384;
 
 WiFiMulti wifiMulti;
 HTTPClient http;
 
-//numero atribuir(float real, float imag);
+int PORT = 1883;
 
+const char* ssid = "Robotica-IMD";
+const char* password = "roboticawifi";
+const char* mqtt_server = "10.7.220.211";
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+long lastMsg = 0;
+char buff[8];
+
+
+
+//numero atribuir(float real, float imag);
 int SAMPLING_FREQUENCY = 1024; //Hz, must be less than 10000 due to ADC
 const int SAMPLES = N;
 unsigned int sampling_period_us = round(1000000*(1.0/SAMPLING_FREQUENCY));
 unsigned long microseconds;
 double vReal[1024];
 double vImag[1024];
-
 
 double timeBegin, timeEnd; //store the time that begun and finished the data sampling.
 int sensorValueI = 0; //Sersor's value data i of n
@@ -47,6 +56,11 @@ float offset;
 void setup() {
     Serial.begin(9600);
     Serial.println("INCIANDO O ESP32");
+
+    setup_wifi();
+    client.subscribe("esp01");
+    client.setServer(mqtt_server, PORT);
+    client.setCallback(callback);
     /*
     wifiMulti.addAP("ESP12614711", "");
     http.setReuse(true);
@@ -122,6 +136,12 @@ void loop() {
     Irms = 5;
     Serial.print("THD: ");
     Serial.println(getTHD(harmonics, Irms));
+    if (!client.connected()) {
+        reconnect();
+    }
+
+
+
     
     delay(20000000000);    
 }

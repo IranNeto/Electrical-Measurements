@@ -1,6 +1,6 @@
 {
     "terminal.integrated.env.linux": {
-        "PATH": "/home/iran/.platformio/penv/bin:/home/iran/.platformio/penv:/home/iran/.local/share/umake/bin:/home/iran/bin:/home/iran/.local/bin:/home/iran/.nvm/versions/node/v8.9.4/bin:/home/iran/.local/share/umake/bin:/home/iran/bin:/home/iran/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/iran/Android/Sdk/tools:/home/iran/Android/Sdk/platform-tools:/home/iran/Android/Sdk/tools:/home/iran/Android/Sdk/platform-tools",
+        "PATH": "/home/iran/.platformio/penv/bin:/home/iran/.platformio/penv:/home/iran/.local/share/umake/bin:/home/iran/bin:/home/iran/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/iran/Android/Sdk/tools:/home/iran/Android/Sdk/platform-tools",
         "PLATFORMIO_CALLER": "vscode"
     },
     "files.associations": {
