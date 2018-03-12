@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet prefetch'
+      href='https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css'>
+    <link rel='stylesheet prefetch'
+      href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css'>
+    <link rel='stylesheet prefetch'
+      href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link rel='stylesheet prefetch' href='css/main.css'/>
+  </head>
+  <body>
+  <div class="box-main">
+    <div class="hero-body hero box-title">
+      <div class="container">
+        <h1 class="title">
+          THD measurement
+        </h1>
+      </div>
+    </div>
+   <section class="section">
+      <div class='box-chart'>
+        <canvas id='chart' class='chart'></canvas>
+      </div>
+    </section>
+  </div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'></script>
+  <script src="https://unpkg.com/mqtt@2.13.1/dist/mqtt.min.js"></script>
+  <script src='chartjs-plugin-streaming.min.js'></script>
+  <script src='js/main.js'></script>
+  </body>
+</html>
