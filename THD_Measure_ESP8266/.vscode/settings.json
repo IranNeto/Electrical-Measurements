@@ -1,0 +1,7 @@
+{
+    "terminal.integrated.env.linux": {
+        "PATH": "/home/iotlab/.platformio/penv/bin:/home/iotlab/.platformio/penv:/home/iotlab/bin:/home/iotlab/.local/bin:/home/iotlab/bin:/home/iotlab/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+        "PLATFORMIO_CALLER": "vscode"
+    },
+    "git.ignoreLimitWarning": true
+}
