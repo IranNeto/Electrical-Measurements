@@ -1,33 +1,52 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel='stylesheet prefetch'
-      href='https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css'>
-    <link rel='stylesheet prefetch'
-      href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css'>
-    <link rel='stylesheet prefetch'
-      href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
-    <link rel='stylesheet prefetch' href='css/main.css'/>
-  </head>
-  <body>
+
+<head>
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css'>
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css'>
+  <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+  <link rel='stylesheet prefetch' href='css/main.css' />
+</head>
+
+<body>
   <div class="box-main">
     <div class="hero-body hero box-title">
       <div class="container">
         <h1 class="title">
-          THD measurement
+          Medição de temperatura em tempo real
         </h1>
       </div>
     </div>
-   <section class="section">
-      <div class='box-chart'>
-        <canvas id='chart' class='chart'></canvas>
-      </div>
-    </section>
+    <div style="display:flex">
+      <section class="section" style="width:50%; padding: 20px 2px 20px 20px">
+        <div class='box-chart'>
+          <canvas id='chart' class='chart' style="display: right"></canvas>
+        </div>
+      </section>
+      <section class="section" style="width:50%; padding: 20px 20px 20px 2px">
+        <div class='box-chart'>
+          <canvas id='chart2' class='chart'></canvas>
+        </div>
+      </section>
+    </div>
+    <div id="container" style=" display: left; min-width: 310px; max-width: 400px; height: 300px; margin: 0 auto"></div>
   </div>
+  </div>
+
+  <div id="container" style="min-width: 310px; max-width: 400px; height: 300px; margin: 0 auto"></div>
+
   <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'></script>
   <script src="https://unpkg.com/mqtt@2.13.1/dist/mqtt.min.js"></script>
   <script src='chartjs-plugin-streaming.min.js'></script>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-more.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
   <script src='js/main.js'></script>
-  </body>
+  <script src='js/speedometer.js'></script>
+
+</body>
+
 </html>

@@ -9,8 +9,8 @@
   "author": "Guilherme Oliveira",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.16.2",
-    "mosca": "^2.5.2",
+    "express": "^4.16.3",
+    "mosca": "^2.8.0",
     "node-gyp": "^3.6.2"
   }
 }

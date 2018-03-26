@@ -14,6 +14,7 @@ const ascoltatore = {
 };
 */
 
+
 const broker = new mosca.Server({port: 8080});
 
 broker.on('clientConnected', (client) => {
@@ -22,9 +23,8 @@ broker.on('clientConnected', (client) => {
 
 // fired when a message is received/js
 broker.on('published', (packet, client) => {
-	console.log('Published', packet.payload.toString());
+  console.log('Published', packet.payload.toString())
 });
-
 
 broker.on('ready', () => console.log('Mosca server is up and running'))
 
