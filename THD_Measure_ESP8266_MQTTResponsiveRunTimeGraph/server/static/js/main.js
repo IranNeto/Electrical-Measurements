@@ -14,11 +14,13 @@ client.on("message",(topic, payload) => {
 	//O ParseErros acontece quando o ESP manda algum valor inválido: NaN, inf.
 	console.log(payload.toString());
 	const msg = JSON.parse(payload.toString());
-	ih = msg.ih;
-	I = msg.I;
-	ifd = msg.ifd;
-	thd = msg.thd;
-	freq = msg.freq;
+	ih = parseFloat(msg.ih.toFixed(3));
+	I = parseFloat(msg.I.toFixed(3));
+	ifd = parseFloat(msg.ifd.toFixed(3));
+	thd = parseFloat(msg.thd.toFixed(3));
+	freq = parseFloat(msg.freq.toFixed(3));
+	ifd = I-ih;
+
 })
 
 const ctx = document.getElementById("chart").getContext('2d')
@@ -133,7 +135,7 @@ var config2 = {
 	type: 'line',
 	data: {
 		datasets: [{
-			label: 'Ih',
+			label: 'THD',
 			backgroundColor: color(chartColors.green).alpha(0.2).rgbString(),
 			borderColor: chartColors.green,
 			fill: false,

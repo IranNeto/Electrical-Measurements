@@ -9,9 +9,9 @@ int N = 1024;
 
 int PORT = 8080;
 
-const char* ssid = "RSBEZERRA2";
-const char* password = "ssberj78";
-const char* mqtt_server = "192.168.0.20";
+const char* ssid = "ESP";
+const char* password = "12345678";
+const char* mqtt_server = "10.0.0.103";
 long lastMsg = 0;
 char buff[100];
 
@@ -38,7 +38,7 @@ float offset;
 float THD;
 int k = 0;
 //SETUP ======================
-
+float ih, ifd;
 
 void setup() {
     Serial.begin(9600);
@@ -47,6 +47,7 @@ void setup() {
     setup_wifi();
     client.setServer(mqtt_server, PORT);
     client.setCallback(callback);
+    
     //ESP.wdtDisable();
     /*
     http.begin("10.0.0.101", 8080, "/");
@@ -98,6 +99,8 @@ void loop() {
                     harmonics[n] += vReal[0]; //if peak == 0
                     break;
                 }
+            } else {
+                harmonics[n] = 0.0;
             }
         }
         if(!peak) break; //i
@@ -109,7 +112,7 @@ void loop() {
     THD = getTHD(harmonics, I);
 
     //filter these values
-    if(harmonics[0] < 200 | !peak){
+    if(harmonics[0] < 500 | !peak){
         peak = 0.0;
         THD = 0.0;
         I = 0.0;
@@ -143,12 +146,14 @@ void loop() {
 
     //I*THD = Corrente total distorcida;
     //I*(1-THD) = Corrente da frequencia fundamental
+    ih = I*THD/100;
+    ifd = I*(1-ih);
     String aspas = "\"";
-    String json = "{ " + aspas + "I" + aspas + ":" + random(5) + ",";
-        json += aspas + "ih" + aspas + ":" + /*I*THD*/ random(5) + ",";
-        json += aspas + "ifd" + aspas + ":" + /*I*(100-THD)*/ random(6) + ",";
-        json += aspas + "thd" + aspas + ":" + /*THD*/ random(10)+ ",";
-        json += aspas + "freq" + aspas + ":" + /*peak*/ random(100);
+    String json = "{ " + aspas + "I" + aspas + ":" + I + ",";
+        json += aspas + "ih" + aspas + ":" + ih + ",";
+        json += aspas + "ifd" + aspas + ":" + ifd + ",";
+        json += aspas + "thd" + aspas + ":" + THD+ ",";
+        json += aspas + "freq" + aspas + ":" + peak;
         json += "}";
     json.toCharArray(buff, json.length()+1);
     Serial.print("Publish message: ");
