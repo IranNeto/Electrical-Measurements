@@ -9,9 +9,9 @@ int N = 1024;
 
 int PORT = 8080;
 
-const char* ssid = "ESP";
-const char* password = "12345678";
-const char* mqtt_server = "10.0.0.103";
+const char* ssid = "RSBEZERRA2";
+const char* password = "ssberj78";
+const char* mqtt_server = "192.168.0.20";
 long lastMsg = 0;
 char buff[100];
 
@@ -144,17 +144,17 @@ void loop() {
     //I*THD = Corrente total distorcida;
     //I*(1-THD) = Corrente da frequencia fundamental
     String aspas = "\"";
-    String json = "{ " + aspas + "I" + aspas + ":" + I + ",";
-        json += aspas + "Ih" + aspas + ":" + I*THD + ",";
-        json += aspas + "Ifd" + aspas + ":" + I*(1-THD) + ",";
-        json += aspas + "thd" + aspas + ":" + THD + ",";
-        json += aspas + "freq" + aspas + ":" + peak;
+    String json = "{ " + aspas + "I" + aspas + ":" + random(5) + ",";
+        json += aspas + "ih" + aspas + ":" + /*I*THD*/ random(5) + ",";
+        json += aspas + "ifd" + aspas + ":" + /*I*(100-THD)*/ random(6) + ",";
+        json += aspas + "thd" + aspas + ":" + /*THD*/ random(10)+ ",";
+        json += aspas + "freq" + aspas + ":" + /*peak*/ random(100);
         json += "}";
     json.toCharArray(buff, json.length()+1);
     Serial.print("Publish message: ");
     Serial.println(buff);
     client.publish("/temperature", buff);
-    delay(2000);
+    delay(500);
     k++;
     
 }
