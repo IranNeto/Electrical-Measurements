@@ -26,6 +26,10 @@ broker.on('published', (packet, client) => {
   console.log('Published', packet.payload.toString())
 });
 
+broker.on('published', (packet, client) => {
+  console.log('Published', packet.payload.toString())
+});
+
 broker.on('ready', () => console.log('Mosca server is up and running'))
 
 app.use(express.static('static'))
