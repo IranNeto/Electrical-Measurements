@@ -6,7 +6,7 @@ const httpServer = http.createServer(app)
 const mosca    = require('mosca')
 
 //const fft = require('fft-js').fft,
-// fftUtil = require('fft-js').util,  ssignal = [];
+// fftUtil = require('fft-js').util, signal[];
 
 /*
 const ascoltatore = {
@@ -26,6 +26,10 @@ broker.on('clientConnected', (client) => {
 
 // fired when a message is received/js
 broker.on('published', (packet, client) => {
+  /*
+    É aqui que será necessário formatar o dado recebido do esp para um vetor de números e aplicar a fft
+    Acho que a biblioteca que vc me mandou no wpp é a msm que usei pra testar é só seguir os exemplos que dá certo (vê app2.js)
+  */
   console.log('Published', packet.payload.toString())
 });
 
