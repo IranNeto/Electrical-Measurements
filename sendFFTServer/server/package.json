@@ -1,0 +1,16 @@
+{
+  "name": "mqtt-test",
+  "version": "1.0.0",
+  "description": "Test com MQTT + ESP8266 + sensores",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Guilherme Oliveira",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mosca": "^2.8.0",
+    "node-gyp": "^3.6.2"
+  }
+}

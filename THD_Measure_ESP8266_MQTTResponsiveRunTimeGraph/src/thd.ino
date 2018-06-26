@@ -1,14 +1,3 @@
-float getOffset(){
-    float sumOffsetData = 0;
-    for(int i = 0; i < 20; i++){
-        sumOffsetData += analogRead(A0);
-        delay(2);
-    }
-
-    return(sumOffsetData/20.0); //average
-
-}
-
 float getTHD(float* freq, float I){
     float sumHarmonic = 0;
     float* normalize = (float*) malloc(nharmonics*sizeof(float));
@@ -22,5 +11,5 @@ float getTHD(float* freq, float I){
             sumHarmonic += normalize[i] * normalize[i]; //See the THD formula
     }
     
-    return sqrt((sumHarmonic)/I)*100; //Percent
+    return sqrt((sumHarmonic)/I); //Percent
 }

@@ -1,0 +1,41 @@
+body {
+  background: #fff;
+}
+.section {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  background: #fff;
+  border-radius: 5px;
+}
+.box-main {
+  width: 100%;
+  height: 100%;
+}
+.title,
+.subtitle {
+  color: #fff;
+}
+.box-title {
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+  background: rgb(0, 96, 100);
+  color: #fff;
+}
+.hero-body {
+  padding: 0.5rem 1.5rem;
+  align-content: center;
+}
+#containter {
+  display: inline;
+}
+
+.box-chart {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.chart {
+  background: #fff;
+  padding: 15px;
+}

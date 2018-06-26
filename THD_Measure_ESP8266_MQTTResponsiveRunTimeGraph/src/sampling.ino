@@ -9,9 +9,9 @@ int N = 1024;
 
 int PORT = 8080;
 
-const char* ssid = "ESP";
-const char* password = "12345678";
-const char* mqtt_server = "10.0.0.103";
+const char* ssid = "LII";
+const char* password = "wifiLI2Rn";
+const char* mqtt_server = "192.168.0.115";
 long lastMsg = 0;
 char buff[100];
 
@@ -19,11 +19,11 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 //numero atribuir(float real, float imag);
-int SAMPLING_FREQUENCY = 1024; //Hz, must be less than 10000 due to ADC
+int SAMPLING_FREQUENCY = N; //Hz, must be less than 10000 due to ADC
 unsigned int sampling_period_us = round(1000000*(1.0/SAMPLING_FREQUENCY));
 unsigned long microseconds;
-double vReal[1024] = {};
-double vImag[1024] = {};
+double vReal[N] = {};
+double vImag[N] = {};
 //double timeBegin, timeEnd; //store the time that begun and finished the data sampling.
 double sensorValueAcc = 0; //Sensor's value accumulated
 float I;
@@ -38,7 +38,7 @@ float offset;
 float THD;
 int k = 0;
 //SETUP ======================
-float ih, ifd;
+
 
 void setup() {
     Serial.begin(9600);
@@ -47,7 +47,6 @@ void setup() {
     setup_wifi();
     client.setServer(mqtt_server, PORT);
     client.setCallback(callback);
-    
     //ESP.wdtDisable();
     /*
     http.begin("10.0.0.101", 8080, "/");
@@ -64,11 +63,9 @@ void setup() {
 //LOOP ======================
 void loop() {
     delay(100); //Inicial delay
-    offset = getOffset();
     while (i < N){
         microseconds = micros(); 
-        vReal[i] = map(analogRead(A0), 1, offset, 1, 512); //map in 3v3 adc scale
-        vReal[i] -= 512; //offset
+        vReal[i] = map(analogRead(A0), 1, 774, 1, 512) - 512; //map in 3v3 adc scale
         //Serial.println(vReal[i]);
         sensorValueAcc += (vReal[i] * vReal[i]); //sum square
         i++; //counting number of samples,
@@ -99,8 +96,6 @@ void loop() {
                     harmonics[n] += vReal[0]; //if peak == 0
                     break;
                 }
-            } else {
-                harmonics[n] = 0.0;
             }
         }
         if(!peak) break; //i
@@ -112,7 +107,7 @@ void loop() {
     THD = getTHD(harmonics, I);
 
     //filter these values
-    if(harmonics[0] < 500 | !peak){
+    if(harmonics[0] < 200 || !peak){
         peak = 0.0;
         THD = 0.0;
         I = 0.0;
@@ -146,13 +141,11 @@ void loop() {
 
     //I*THD = Corrente total distorcida;
     //I*(1-THD) = Corrente da frequencia fundamental
-    ih = I*THD/100;
-    ifd = I*(1-ih);
     String aspas = "\"";
     String json = "{ " + aspas + "I" + aspas + ":" + I + ",";
-        json += aspas + "ih" + aspas + ":" + ih + ",";
-        json += aspas + "ifd" + aspas + ":" + ifd + ",";
-        json += aspas + "thd" + aspas + ":" + THD+ ",";
+        json += aspas + "ih" + aspas + ":" + I*THD + ",";
+        json += aspas + "ifd" + aspas + ":" + I*(1-THD) + ",";
+        json += aspas + "thd" + aspas + ":" + THD*100 + ",";
         json += aspas + "freq" + aspas + ":" + peak;
         json += "}";
     json.toCharArray(buff, json.length()+1);
