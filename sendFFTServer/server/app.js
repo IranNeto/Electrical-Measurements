@@ -4,7 +4,8 @@ const express  = require('express')
 const app      = express();
 const httpServer = http.createServer(app)
 const mosca    = require('mosca')
-
+var us = require('microtime');
+var us_time = us.now();
 //const fft = require('fft-js').fft,
 // fftUtil = require('fft-js').util, signal[];
 
@@ -26,11 +27,8 @@ broker.on('clientConnected', (client) => {
 
 // fired when a message is received/js
 broker.on('published', (packet, client) => {
-  /*
-    É aqui que será necessário formatar o dado recebido do esp para um vetor de números e aplicar a fft
-    Acho que a biblioteca que vc me mandou no wpp é a msm que usei pra testar é só seguir os exemplos que dá certo (vê app2.js)
-  */
   console.log('Published', packet.payload.toString())
+  //pegar dados do campo "dados" do json e formatar como um vetor de inteiros pra fazer a operação de fft
 });
 
 broker.on('ready', () => console.log('Mosca server is up and running'))
