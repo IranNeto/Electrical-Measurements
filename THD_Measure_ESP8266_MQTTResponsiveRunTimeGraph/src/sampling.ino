@@ -42,7 +42,7 @@ int k = 0;
 
 void setup() {
     Serial.begin(9600);
-    Serial.println("INCIANDO O ESP8266");
+    Serial.println("INICIANDO O ESP8266");
 
     setup_wifi();
     client.setServer(mqtt_server, PORT);
