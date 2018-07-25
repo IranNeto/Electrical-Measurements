@@ -56,6 +56,7 @@ void setup() {
 //
 //1810 amostras em 2seg
 void loop() {
+    delay(10000);
     i = 0;
     sensorValueAcc = 0;
     timeBegin = micros();
